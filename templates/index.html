@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <script src="https://cdn.tailwindcss.com"></script>
+     <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+ <div class="flex flex-col items-center mt-10 gap-4">
+
+  <h2>🎟️ Ticket System</h2>
+
+  <!-- Generate Button -->
+  <button onclick="generate()" style="background:green;color:white;padding:10px;">
+    Generate Ticket
+  </button>
+
+  <!-- Code Display -->
+  <input id="code" placeholder="Ticket code" style="padding:8px; width:250px;">
+
+  <!-- QR Image -->
+  <img id="qr" style="width:150px; margin-top:10px;" />
+
+  <hr>
+
+  <!-- Scanner -->
+  <h3>Scan QR to Redeem 📸</h3>
+  <div id="reader" style="width:300px;"></div>
+
+  <p id="result"></p>
+
+</div>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<script>
+// ✅ Generate Ticket
+function generate() {
+  fetch(`/generate/`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("code").value = data.code;
+      document.getElementById("qr").src = data.qr;
+    });
+}
+
+// ✅ Scan Success → Auto Redeem
+function onScanSuccess(decodedText) {
+    document.getElementById("result").innerText = "Scanned: " + decodedText;
+
+    fetch(`/redeem/${decodedText}/`)
+        .then(res => res.json())
+        .then(data => {
+            alert(data.status);
+        });
+}
+
+function onScanError(error) {}
+
+let scanner = new Html5QrcodeScanner(
+    "reader",
+    { fps: 10, qrbox: 250 }
+);
+
+scanner.render(onScanSuccess, onScanError);
+</script>
+</body>
+</html>
