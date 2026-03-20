@@ -3,7 +3,7 @@
 ## 🚀 Setup Instructions
 
 ### 1. Clone project
-git clone https://github.com/yourusername/ticket-system.git
+git clone https://github.com/Suhail-106/ticket.git
 
 cd ticket-system
 
